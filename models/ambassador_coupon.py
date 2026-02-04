@@ -9,7 +9,7 @@ class AmbassadorCoupon(models.Model):
     _name = 'ambassador.coupon'
     _description = 'Ambassador Coupon Tracking'
     _order = 'usage_date desc'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     partner_id = fields.Many2one(
         'res.partner',

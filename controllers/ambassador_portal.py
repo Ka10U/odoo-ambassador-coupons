@@ -17,7 +17,7 @@ class AmbassadorPortal(CustomerPortal):
             return request.redirect('/my')
 
         try:
-            discount_codes = partner.ambassador_discount_code_ids
+            discount_codes = partner.ambassador_coupon_ids
 
             stats = []
             for code in discount_codes:
@@ -49,7 +49,7 @@ class AmbassadorPortal(CustomerPortal):
 
         try:
             result = {}
-            for code in partner.ambassador_discount_code_ids:
+            for code in partner.ambassador_coupon_ids:
                 stats = request.env['ambassador.coupon']._get_usage_stats(partner.id)
                 result[code.id] = {
                     'code': code.name,

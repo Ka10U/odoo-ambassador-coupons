@@ -16,7 +16,9 @@ class ResPartner(models.Model):
     ambassador_coupon_ids = fields.Many2many(
         'product.coupon',
         string='Ambassador Discount Codes',
-        relation='ambassador_coupon_rel',
+        relation='ambassador_discount_code_rel',
+        column1='partner_id',
+        column2='coupon_id',
         help='Discount codes linked to this ambassador'
     )
 
@@ -45,7 +47,7 @@ class ProductCoupon(models.Model):
     )
     ambassador_partner_ids = fields.Many2many(
         'res.partner',
-        relation='ambassador_coupon_rel',
+        relation='ambassador_partner_rel',
         column1='coupon_id',
         column2='partner_id',
         string='Ambassador Partners',

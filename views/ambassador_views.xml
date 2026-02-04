@@ -22,7 +22,7 @@
         <record id="view_product_coupon_form_ambassador" model="ir.ui.view">
             <field name="name">product.coupon.form.ambassador</field>
             <field name="model">product.coupon</field>
-            <field name="inherit_id">sale.product_coupon_form_view</field>
+            <field name="inherit_id">sale.product_coupon_view_form</field>
             <field name="arch">
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="ambassador_id"/>

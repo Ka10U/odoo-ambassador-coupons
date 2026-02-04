@@ -21,7 +21,7 @@ This information should incentivize ambassadors to promote the brand as they can
 
 # GENERAL INSTRUCTIONS
 
-Respect state of the art rules for Odoo modules development.
+Respect state of the art rules for Odoo 18.0 modules development.
 
 Write and run tests whenever relevant.
 
