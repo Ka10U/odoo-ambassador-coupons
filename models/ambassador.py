@@ -13,25 +13,25 @@ class ResPartner(models.Model):
         default=False,
         help='Check this box to grant ambassador status to this portal user'
     )
-    ambassador_discount_code_ids = fields.Many2many(
+    ambassador_coupon_ids = fields.Many2many(
         'product.coupon',
         string='Ambassador Discount Codes',
-        relation='ambassador_discount_code_rel',
+        relation='ambassador_coupon_rel',
         help='Discount codes linked to this ambassador'
     )
 
-    @api.constrains('is_ambassador', 'ambassador_discount_code_ids')
+    @api.constrains('is_ambassador', 'ambassador_coupon_ids')
     def _check_ambassador_codes(self):
         for partner in self:
-            if partner.is_ambassador and not partner.ambassador_discount_code_ids:
+            if partner.is_ambassador and not partner.ambassador_coupon_ids:
                 raise ValidationError(
                     _('An ambassador must have at least one discount code assigned.')
                 )
 
-    @api.onchanges('is_ambassador')
+    @api.onchange('is_ambassador')
     def _onchange_ambassador_status(self):
         if not self.is_ambassador:
-            self.ambassador_discount_code_ids = False
+            self.ambassador_coupon_ids = [(5, 0, 0)]
 
 
 class ProductCoupon(models.Model):
@@ -43,24 +43,19 @@ class ProductCoupon(models.Model):
         domain=[('is_ambassador', '=', True)],
         help='Primary ambassador linked to this discount code'
     )
-    ambassador_user_ids = fields.Many2many(
+    ambassador_partner_ids = fields.Many2many(
         'res.partner',
-        relation='ambassador_discount_code_rel',
+        relation='ambassador_coupon_rel',
         column1='coupon_id',
         column2='partner_id',
-        string='Ambassador Users',
+        string='Ambassador Partners',
         domain=[('is_ambassador', '=', True)],
         readonly=True,
-        help='Ambassadors who can use this discount code'
+        help='Partners who are ambassadors for this discount code'
     )
 
-    @api.constrains('ambassador_id', 'ambassador_user_ids')
+    @api.constrains('ambassador_id', 'ambassador_partner_ids')
     def _check_ambassador_consistency(self):
-        for discount in self:
-            if discount.ambassador_id:
-                ambassador_in_users = discount.ambassador_id in discount.ambassador_user_ids
-                should_be_in_users = discount.ambassador_id in self.mapped(
-                    'ambassador_discount_code_ids.partner_id'
-                )
-                if not ambassador_in_users and should_be_in_users:
-                    discount.ambassador_user_ids |= discount.ambassador_id
+        for coupon in self:
+            if coupon.ambassador_id and coupon.ambassador_id not in coupon.ambassador_partner_ids:
+                coupon.ambassador_partner_ids |= coupon.ambassador_id

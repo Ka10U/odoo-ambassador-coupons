@@ -9,27 +9,36 @@ class AmbassadorCoupon(models.Model):
     _name = 'ambassador.coupon'
     _description = 'Ambassador Coupon Tracking'
     _order = 'usage_date desc'
+    _inherit = ['mail.thread']
 
     partner_id = fields.Many2one(
         'res.partner',
         string='Ambassador',
         required=True,
-        domain=[('is_ambassador', '=', True)]
+        domain=[('is_ambassador', '=', True)],
+        tracking=True
     )
     coupon_id = fields.Many2one(
         'product.coupon',
         string='Discount Code',
-        required=True
+        required=True,
+        tracking=True
     )
     usage_date = fields.Date(
         string='Usage Date',
-        help='Date when the discount code was used'
+        help='Date when the discount code was used',
+        tracking=True
     )
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('abandoned', 'Abandoned Cart'),
-        ('sale', 'Validated Order'),
-    ], string='Status', default='draft')
+    state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('abandoned', 'Abandoned Cart'),
+            ('sale', 'Validated Order'),
+        ],
+        string='Status',
+        default='draft',
+        tracking=True
+    )
 
     @api.model
     @ormcache()

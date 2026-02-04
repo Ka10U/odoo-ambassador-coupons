@@ -31,7 +31,7 @@ Odoo module for tracking discount coupon usage by brand ambassadors.
 
 ## Requirements
 
-- Odoo 16.0
+- Odoo 18.0
 - Sale module
 - Website module
 - Portal module
