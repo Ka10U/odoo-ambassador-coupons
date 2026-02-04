@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form_ambassador" model="ir.ui.view">
+            <field name="name">res.partner.form.ambassador</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id">base.view_partner_form</field>
+            <field name="arch">
+                <xpath expr="//page[@name='internal_notes']" position="before">
+                    <page name="ambassador" string="Ambassador" attrs="{'invisible': [('is_ambassador', '=', False)]}">
+                        <group>
+                            <field name="ambassador_discount_code_ids" widget="many2many_tags"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="is_ambassador"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_product_discount_form_ambassador" model="ir.ui.view">
+            <field name="name">product.discount.form.ambassador</field>
+            <field name="model">product.discount</field>
+            <field name="inherit_id">sale.view_product_discount_form</field>
+            <field name="arch">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="ambassador_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_ambassador_coupon_tree" model="ir.ui.view">
+            <field name="name">ambassador.coupon.tree</field>
+            <field name="model">ambassador.coupon</field>
+            <field name="arch">
+                <tree>
+                    <field name="partner_id"/>
+                    <field name="discount_code_id"/>
+                    <field name="usage_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ambassador_coupon_form" model="ir.ui.view">
+            <field name="name">ambassador.coupon.form</field>
+            <field name="model">ambassador.coupon</field>
+            <field name="arch">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="discount_code_id"/>
+                            <field name="usage_date"/>
+                            <field name="state"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_ambassador_coupon" model="ir.actions.act_window">
+            <field name="name">Ambassador Coupons</field>
+            <field name="res_model">ambassador.coupon</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_ambassador_coupon"
+                  name="Ambassador Coupons"
+                  parent="sale.menu_sale_config"
+                  action="action_ambassador_coupon"
+                  sequence="50"/>
+    </data>
+</odoo>

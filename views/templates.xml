@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+        <template id="portal_ambassador_coupons" name="Ambassador Coupons">
+            <t t-call="portal.portal_layout">
+                <div class="o_portal_my_wrap">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="mb-0">Ambassador Coupon Statistics</h3>
+                            <a href="/my/ambassador/coupons/export" class="btn btn-secondary btn-sm">
+                                <i class="fa fa-download"/> Export CSV
+                            </a>
+                        </div>
+
+                        <div t-if="not discount_codes" class="alert alert-info">
+                            <p>No discount codes are linked to your ambassador account.</p>
+                            <p>Please contact an administrator to assign discount codes.</p>
+                        </div>
+
+                        <div class="row">
+                            <t t-foreach="stats" t-as="stat">
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="card-title mb-0">
+                                                <i class="fa fa-tag mr-2"/>
+                                                <span t-esc="stat['code'].name"/>
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container" style="position: relative; height: 300px;">
+                                                <canvas t-att-id="'chart_' + str(stat['code'].id)"/>
+                                                <div t-att-data-code="stat['code'].id"
+                                                     class="chart-loading">
+                                                    <i class="fa fa-spinner fa-spin fa-2x"/>
+                                                    <p>Loading statistics...</p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3">
+                                                <div class="row text-center">
+                                                    <div class="col-6">
+                                                        <div class="stat-box">
+                                                            <h6 class="text-muted">Total Usage</h6>
+                                                            <h4 t-esc="sum(s['total_usage'] for s in stat['usage_stats'])"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="stat-box">
+                                                            <h6 class="text-muted">Validated Orders</h6>
+                                                            <h4 t-esc="sum(s['validated_orders'] for s in stat['usage_stats'])"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-muted small">
+                                            <span>Last 12 months data</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="error_page" name="Error Page">
+            <t t-call="portal.portal_layout">
+                <div class="container-fluid">
+                    <div class="alert alert-danger mt-4">
+                        <h4>An error occurred</h4>
+                        <p t-esc="error"/>
+                        <a href="/my/ambassador/coupons" class="btn btn-primary mt-2">
+                            Try Again
+                        </a>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="assets_frontend" inherit_id="portal.assets_frontend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/ambassador_coupons/static/src/js/chart.js"/>
+                <link rel="stylesheet" type="text/css" href="/ambassador_coupons/static/src/css/portal.css"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

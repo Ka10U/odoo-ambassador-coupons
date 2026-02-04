@@ -1,0 +1,97 @@
+/* Ambassador Coupons Portal Styles */
+
+.chart-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.chart-loading p {
+    margin-top: 10px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.stat-box {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-box h4 {
+    font-weight: 600;
+    margin: 5px 0 0;
+}
+
+.stat-box h6 {
+    font-size: 12px;
+    margin: 0;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    padding: 12px 20px;
+}
+
+.card-header h5 {
+    margin: 0;
+    font-weight: 500;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-footer {
+    border-radius: 0 0 10px 10px !important;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+}
+
+.chart-container {
+    position: relative;
+    min-height: 250px;
+}
+
+@media (max-width: 768px) {
+    .card-header h5 {
+        font-size: 16px;
+    }
+
+    .stat-box {
+        margin-bottom: 10px;
+    }
+
+    .chart-container {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-sm {
+        width: 100%;
+    }
+}
