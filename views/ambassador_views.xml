@@ -6,23 +6,23 @@
             <field name="model">res.partner</field>
             <field name="inherit_id">base.view_partner_form</field>
             <field name="arch">
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="is_ambassador"/>
+                </xpath>
                 <xpath expr="//page[@name='internal_notes']" position="before">
-                    <page name="ambassador" string="Ambassador" attrs="{'invisible': [('is_ambassador', '=', False)]}">
+                    <page name="ambassador" string="Ambassador" invisible="not is_ambassador">
                         <group>
                             <field name="ambassador_discount_code_ids" widget="many2many_tags"/>
                         </group>
                     </page>
                 </xpath>
-                <xpath expr="//field[@name='function']" position="after">
-                    <field name="is_ambassador"/>
-                </xpath>
             </field>
         </record>
 
-        <record id="view_product_discount_form_ambassador" model="ir.ui.view">
-            <field name="name">product.discount.form.ambassador</field>
-            <field name="model">product.discount</field>
-            <field name="inherit_id">sale.view_product_discount_form</field>
+        <record id="view_product_coupon_form_ambassador" model="ir.ui.view">
+            <field name="name">product.coupon.form.ambassador</field>
+            <field name="model">product.coupon</field>
+            <field name="inherit_id">sale.product_coupon_form_view</field>
             <field name="arch">
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="ambassador_id"/>
@@ -36,7 +36,7 @@
             <field name="arch">
                 <tree>
                     <field name="partner_id"/>
-                    <field name="discount_code_id"/>
+                    <field name="coupon_id"/>
                     <field name="usage_date"/>
                     <field name="state"/>
                 </tree>
@@ -51,7 +51,7 @@
                     <sheet>
                         <group>
                             <field name="partner_id"/>
-                            <field name="discount_code_id"/>
+                            <field name="coupon_id"/>
                             <field name="usage_date"/>
                             <field name="state"/>
                         </group>

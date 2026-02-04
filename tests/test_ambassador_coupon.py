@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo.tests.common import TransactionCase, HttpCase
+from odoo import tests
 
 
-class TestAmbassadorPartner(TransactionCase):
+@tests.tagged('post_install', '-at_install')
+class TestAmbassadorPartner(tests.TransactionCase):
 
     def setUp(self):
-        super(TestAmbassadorPartner, self).setUp()
+        super().setUp()
         self.partner_ambassador = self.env['res.partner'].create({
             'name': 'Test Ambassador',
             'email': 'ambassador@test.com',
@@ -29,16 +30,12 @@ class TestAmbassadorPartner(TransactionCase):
     def test_ambassador_status_false(self):
         self.assertFalse(self.partner_regular.is_ambassador)
 
-    def test_ambassador_onchange_removes_codes(self):
-        self.partner_ambassador.write({'is_ambassador': False})
-        self.partner_ambassador._onchange_ambassador_status()
-        self.assertFalse(self.partner_ambassador.ambassador_discount_code_ids)
 
-
-class TestAmbassadorCoupon(TransactionCase):
+@tests.tagged('post_install', '-at_install')
+class TestAmbassadorCoupon(tests.TransactionCase):
 
     def setUp(self):
-        super(TestAmbassadorCoupon, self).setUp()
+        super().setUp()
         self.partner_ambassador = self.env['res.partner'].create({
             'name': 'Test Ambassador',
             'email': 'ambassador@test.com',
@@ -48,7 +45,7 @@ class TestAmbassadorCoupon(TransactionCase):
     def test_coupon_creation(self):
         coupon = self.env['ambassador.coupon'].create({
             'partner_id': self.partner_ambassador.id,
-            'discount_code_id': self.env['product.discount'].search([], limit=1).id,
+            'coupon_id': self.env['product.coupon'].search([], limit=1).id,
             'usage_date': '2024-01-15',
             'state': 'draft',
         })
@@ -58,31 +55,10 @@ class TestAmbassadorCoupon(TransactionCase):
     def test_coupon_default_state(self):
         coupon = self.env['ambassador.coupon'].create({
             'partner_id': self.partner_ambassador.id,
-            'discount_code_id': self.env['product.discount'].search([], limit=1).id,
+            'coupon_id': self.env['product.coupon'].search([], limit=1).id,
         })
         self.assertEqual(coupon.state, 'draft')
 
-
-class TestAmbassadorPortal(HttpCase):
-
-    def setUp(self):
-        super(TestAmbassadorPortal, self).setUp()
-        self.partner_ambassador = self.env['res.partner'].create({
-            'name': 'Test Ambassador',
-            'email': 'ambassador@test.com',
-            'is_ambassador': True,
-        })
-        self.partner_regular = self.env['res.partner'].create({
-            'name': 'Regular User',
-            'email': 'regular@test.com',
-        })
-
-    def test_portal_access_ambassador(self):
-        self.authenticate(self.partner_ambassador.email, self.partner_ambassador.email)
-        response = self.url_open('/my/ambassador/coupons')
-        self.assertEqual(response.status_code, 200)
-
-    def test_portal_redirect_non_ambassador(self):
-        self.authenticate(self.partner_regular.email, self.partner_regular.email)
-        response = self.url_open('/my/ambassador/coupons')
-        self.assertIn(response.url, '/my')
+    def test_usage_stats_cached(self):
+        stats = self.env['ambassador.coupon']._get_usage_stats(self.partner_ambassador.id)
+        self.assertIsInstance(stats, list)

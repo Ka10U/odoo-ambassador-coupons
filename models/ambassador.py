@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, SUPERUSER_ID
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
@@ -14,7 +14,7 @@ class ResPartner(models.Model):
         help='Check this box to grant ambassador status to this portal user'
     )
     ambassador_discount_code_ids = fields.Many2many(
-        'product.discount',
+        'product.coupon',
         string='Ambassador Discount Codes',
         relation='ambassador_discount_code_rel',
         help='Discount codes linked to this ambassador'
@@ -28,14 +28,14 @@ class ResPartner(models.Model):
                     _('An ambassador must have at least one discount code assigned.')
                 )
 
-    @api.onchange('is_ambassador')
+    @api.onchanges('is_ambassador')
     def _onchange_ambassador_status(self):
         if not self.is_ambassador:
             self.ambassador_discount_code_ids = False
 
 
-class ProductDiscount(models.Model):
-    _inherit = 'product.discount'
+class ProductCoupon(models.Model):
+    _inherit = 'product.coupon'
 
     ambassador_id = fields.Many2one(
         'res.partner',
@@ -46,7 +46,7 @@ class ProductDiscount(models.Model):
     ambassador_user_ids = fields.Many2many(
         'res.partner',
         relation='ambassador_discount_code_rel',
-        column1='discount_id',
+        column1='coupon_id',
         column2='partner_id',
         string='Ambassador Users',
         domain=[('is_ambassador', '=', True)],

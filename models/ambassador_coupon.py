@@ -16,8 +16,8 @@ class AmbassadorCoupon(models.Model):
         required=True,
         domain=[('is_ambassador', '=', True)]
     )
-    discount_code_id = fields.Many2one(
-        'product.discount',
+    coupon_id = fields.Many2one(
+        'product.coupon',
         string='Discount Code',
         required=True
     )
@@ -40,8 +40,8 @@ class AmbassadorCoupon(models.Model):
                     TO_CHAR(pc.create_date, 'YYYY-MM') AS month,
                     COUNT(*) AS total_usage,
                     COUNT(CASE WHEN s.state IN ('sale', 'done') THEN 1 END) AS validated_orders
-                FROM product_discount pc
-                LEFT JOIN sale_order_line sol ON sol.product_discount_id = pc.id
+                FROM product_coupon pc
+                LEFT JOIN sale_order_line sol ON sol.coupon_id = pc.id
                 LEFT JOIN sale_order s ON s.id = sol.order_id
                 WHERE pc.ambassador_id = %s
                 AND pc.create_date >= CURRENT_DATE - INTERVAL '%s months'
@@ -61,7 +61,7 @@ class AmbassadorCoupon(models.Model):
             'res_model': 'sale.order',
             'view_mode': 'tree,form',
             'domain': [
-                ('order_line.product_discount_id', '=', self.discount_code_id.id)
+                ('order_line.coupon_id', '=', self.coupon_id.id)
             ],
             'context': {'create': False},
         }

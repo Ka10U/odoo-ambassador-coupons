@@ -14,7 +14,7 @@ This module allows:
     'author': "My Company",
     'website': "http://www.yourcompany.com",
     'category': 'Sales/Point of Sale',
-    'version': '16.0.1.0.0',
+    'version': '18.0.1.0.0',
     'depends': ['base', 'sale', 'website', 'website_sale', 'portal'],
     'data': [
         'security/ir.model.access.csv',
