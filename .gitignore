@@ -92,3 +92,8 @@ Thumbs.db
 # Coverage
 coverage.xml
 *.cover
+
+# Environment variables (contains sensitive data)
+.env
+.env.local
+.env.*.local
